@@ -1,0 +1,241 @@
+/* src/app/app.css */
+.app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* --- Cabecera --- */
+.hero-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+}
+
+.hero-section h1 {
+  font-size: 3rem;
+  margin: 0;
+  background: linear-gradient(to right, #38bdf8, #818cf8);
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: -1px;
+}
+
+.hero-section p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+}
+
+/* --- Panel de Subida --- */
+.control-panel {
+  margin-bottom: 40px;
+}
+
+.upload-box {
+  background: rgba(30, 41, 59, 0.5);
+  border: 2px dashed #475569;
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.upload-box:hover {
+  border-color: #818cf8;
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.upload-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.upload-box h3 {
+  margin: 0 0 10px 0;
+  color: #f1f5f9;
+}
+
+.upload-box p {
+  color: #64748b;
+  margin-bottom: 25px;
+  font-size: 0.9rem;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+/* --- Tablero de Ejercicios --- */
+.board-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #334155;
+  padding-bottom: 15px;
+}
+
+.board-header h2 {
+  margin: 0;
+  color: #e2e8f0;
+  font-size: 1.5rem;
+}
+
+.badge {
+  background: #047857;
+  color: #a7f3d0;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Tarjetas de Ejercicios */
+.exercise-card {
+  display: flex;
+  background: #1e293b;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  border: 1px solid #334155;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.exercise-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  border-color: #475569;
+}
+
+.exercise-number {
+  background: #334155;
+  color: #94a3b8;
+  padding: 25px 20px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.exercise-content {
+  padding: 25px;
+  flex-grow: 1;
+}
+
+.statement {
+  margin: 0 0 10px 0;
+  color: #cbd5e1;
+  font-size: 1.1rem;
+}
+
+.math-problem {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #38bdf8;
+  background: #0f172a;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+/* Inputs de respuesta */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.input-group:focus-within {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.input-prefix {
+  padding: 12px 15px;
+  background: #1e293b;
+  color: #94a3b8;
+  font-weight: 600;
+  border-right: 1px solid #475569;
+}
+
+.answer-input {
+  flex-grow: 1;
+  background: transparent;
+  border: none;
+  padding: 12px 15px;
+  color: #10b981;
+  font-size: 1.1rem;
+  font-weight: bold;
+  outline: none;
+}
+
+.answer-input::placeholder {
+  color: #475569;
+  font-weight: normal;
+}
+
+/* Esconder flechas del input number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* --- Botón de Evaluar --- */
+.action-area {
+  margin-top: 30px;
+  text-align: right;
+}
+
+.btn-evaluate {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 16px 35px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-evaluate:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+}
