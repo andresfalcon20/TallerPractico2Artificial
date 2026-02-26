@@ -239,3 +239,42 @@ input[type=number]::-webkit-outer-spin-button {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
 }
+
+
+/* Agrega esto al final de tu CSS actual */
+
+input:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.results-panel {
+  background: #f8f9fa;
+  border: 2px solid #ced4da;
+  border-radius: 10px;
+  padding: 30px;
+  margin-top: 30px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.score-display {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.score-high {
+  color: #198754; /* Verde para notas altas (aprobado) */
+}
+
+.score-low {
+  color: #dc3545; /* Rojo para notas bajas (reprobado) */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

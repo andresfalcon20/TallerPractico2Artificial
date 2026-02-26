@@ -126,7 +126,7 @@ export class App {
       `;
 
       // 3. Llamar a Gemini
-      const model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       const result = await model.generateContent([prompt, documentPart]);
       const responseText = result.response.text().trim();
 
@@ -228,7 +228,7 @@ export class App {
     this.respuestaActualStream = '';
 
     try {
-      const model = this.genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      const model = this.genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
       let contenidoAEnviar: any[] = [];
       
       if (this.visionActivada && this.imagenSeleccionada) {

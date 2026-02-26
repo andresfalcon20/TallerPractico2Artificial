@@ -2,52 +2,132 @@
   
   <header class="hero-section">
     <div class="logo-icon">♾️</div>
-    <h1>Evaluador Matetmatico</h1>
+    <h1>Evaluador Matemático Inteligente</h1>
   </header>
 
-  <section class="control-panel">
+  <section class="control-panel" *ngIf="!pruebaEvaluada">
     <div class="upload-box">
       <span class="upload-icon">📄</span>
-      <h3>Cargar Evaluación</h3>
+      <h3>Cargar Evaluación (PDF, Imagen o JSON)</h3>
       <br>
-      <label for="file-upload" class="btn-primary">Explorar Archivos</label>
-      <input id="file-upload" type="file" />
+      
+      <div *ngIf="procesandoDocumento" style="color: #007bff; font-weight: bold; margin-bottom: 15px;">
+        🤖 La IA está leyendo y resolviendo el documento. Por favor espera...
+      </div>
+
+      <label *ngIf="!procesandoDocumento" for="file-upload" class="btn-primary" style="cursor: pointer;">
+        Explorar Archivos
+      </label>
+      <input id="file-upload" type="file" multiple accept=".json, .pdf, image/*" (change)="onFilesSelected($event)" style="display: none;" />
+      
+      <div *ngIf="archivosCargados.length > 0" class="file-status">
+        <p>📁 {{ archivosCargados.length }} archivo(s) procesado(s).</p>
+      </div>
+    </div>
+
+    <div class="manual-entry-box">
+      <h3>Añadir Ejercicio Manual</h3>
+      <input type="text" placeholder="Ej: 5 * 5 + 10" [(ngModel)]="nuevoProblema" class="answer-input input-manual">
+      <input type="number" placeholder="Respuesta correcta" [(ngModel)]="nuevaRespuestaCorrecta" class="answer-input input-manual">
+      <button class="btn-secondary" (click)="agregarEjercicioManual()">➕ Añadir a la lista</button>
     </div>
   </section>
 
   <section class="exercise-board">
     <div class="board-header">
       <h2>Ejercicios Activos</h2>
-      <span class="badge">2 Pendientes</span>
+      <span class="badge">{{ ejercicios.length }} Pendientes</span>
     </div>
 
-    <article class="exercise-card">
-      <div class="exercise-number">01</div>
+    <div *ngIf="ejercicios.length === 0" class="empty-state">
+      No hay ejercicios. Sube un archivo PDF, imagen o agrega uno manualmente.
+    </div>
+
+    <article class="exercise-card" *ngFor="let ej of ejercicios; let i = index">
+      <div class="exercise-number">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</div>
       <div class="exercise-content">
-        <p class="statement">Encuentra el valor de 'x' en la siguiente ecuación lineal:</p>
-        <div class="math-problem">2x + 5 = 15</div>
+        <p class="statement">{{ ej.enunciado }}</p>
+        <div class="math-problem">{{ ej.problema }}</div>
+        
         <div class="input-group">
-          <span class="input-prefix">x =</span>
-          <input type="number" placeholder="Tu respuesta..." class="answer-input" />
+          <span class="input-prefix">{{ ej.prefijo }}</span>
+          <input type="number" placeholder="Tu respuesta..." class="answer-input" 
+                 [(ngModel)]="ej.respuestaUsuario" [disabled]="pruebaEvaluada" />
+        </div>
+
+        <div *ngIf="ej.evaluado" class="feedback">
+          <span *ngIf="ej.correcto" class="correct">✅ ¡Correcto!</span>
+          <span *ngIf="!ej.correcto" class="incorrect">❌ Incorrecto. La respuesta era {{ ej.respuestaCorrecta }}</span>
         </div>
       </div>
     </article>
 
-    <article class="exercise-card">
-      <div class="exercise-number">02</div>
-      <div class="exercise-content">
-        <p class="statement">Resuelve la siguiente operación combinada:</p>
-        <div class="math-problem">8 * 4 - 2</div>
-        <div class="input-group">
-          <span class="input-prefix">R =</span>
-          <input type="number" placeholder="Tu respuesta..." class="answer-input" />
-        </div>
-      </div>
-    </article>
-
-    <div class="action-area">
-      <button class="btn-evaluate">
+    <div class="action-area" *ngIf="ejercicios.length > 0 && !pruebaEvaluada">
+      <button class="btn-evaluate" (click)="evaluarPrueba()">
         <span class="btn-icon">⚡</span> Evaluar Prueba
+      </button>
+    </div>
+
+    <div class="results-panel" *ngIf="pruebaEvaluada">
+      <h2>Resultado de la Evaluación</h2>
+      <div class="score-display" [ngClass]="{'score-high': notaFinal >= 7, 'score-low': notaFinal < 7}">
+        {{ notaFinal }} / 10
+      </div>
+      <p>Has acertado {{ totalCorrectas }} de {{ ejercicios.length }} ejercicios.</p>
+      
+      <button class="btn-primary" (click)="reiniciarPrueba()" style="margin-top: 15px;">
+        🔄 Empezar de nuevo
+      </button>
+    </div>
+  </section>
+
+  <section class="ai-assistant-panel" style="margin-top: 30px; padding: 25px; border: 2px solid #e0e0e0; border-radius: 12px; background-color: #ffffff;">
+    <h2 style="margin-top: 0; color: #333;">🤖 Asistente Virtual</h2>
+
+    <div class="ai-controls" style="margin-bottom: 20px; display: flex; gap: 20px; font-weight: bold; color: #555;">
+      <label style="cursor: pointer;">
+        <input type="checkbox" [(ngModel)]="visionActivada"> 
+        👁️ Activar Visión Artificial
+      </label>
+      <label style="cursor: pointer;">
+        <input type="checkbox" [(ngModel)]="vozActivada"> 
+        🔊 Activar Respuesta por Voz
+      </label>
+    </div>
+
+    <div class="chat-history" style="height: 250px; overflow-y: auto; background: #f4f7f6; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ddd;">
+      
+      <div *ngFor="let msg of historialChat" [ngStyle]="{'text-align': msg.role === 'user' ? 'right' : 'left', 'margin-bottom': '10px'}">
+        <span [ngStyle]="{
+          'display': 'inline-block',
+          'padding': '10px 15px',
+          'border-radius': '15px',
+          'background-color': msg.role === 'user' ? '#007bff' : '#e9ecef',
+          'color': msg.role === 'user' ? '#fff' : '#333',
+          'max-width': '80%'
+        }">
+          <strong>{{ msg.role === 'user' ? 'Tú' : 'Asistente' }}:</strong> <br>
+          {{ msg.text }}
+        </span>
+      </div>
+      
+      <div *ngIf="estaRazonando" style="text-align: left; margin-top: 10px;">
+        <span style="display: inline-block; padding: 10px 15px; border-radius: 15px; background-color: #e9ecef; color: #555; font-style: italic;">
+          🧠 Razonando... {{ respuestaActualStream }}
+        </span>
+      </div>
+    </div>
+
+    <div *ngIf="visionActivada" style="margin-bottom: 15px; padding: 10px; background: #eef2ff; border-radius: 6px; border: 1px dashed #bcccff;">
+      <label style="font-weight: bold; display: block; margin-bottom: 5px;">Sube una imagen para clasificar con el asistente:</label>
+      <input type="file" accept="image/*" (change)="onImageSelectedAI($event)">
+      <span *ngIf="imagenSeleccionada" style="color: green; font-weight: bold; margin-left: 10px;">📸 Imagen lista para enviar</span>
+    </div>
+
+    <div class="chat-inputs" style="display: flex; gap: 10px;">
+      <input type="text" [(ngModel)]="mensajeUsuario" (keyup.enter)="enviarMensajeAI()" placeholder="Pregúntale algo al asistente o envía la imagen..." style="flex-grow: 1; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;">
+      <button class="btn-primary" (click)="enviarMensajeAI()" [disabled]="estaRazonando" style="padding: 12px 24px; font-size: 16px;">
+        Enviar 🚀
       </button>
     </div>
   </section>
